@@ -31,5 +31,7 @@ It then explains what Debian's *'"Social Contract"* with the Free Software Commu
 ## Citations
 
   United States, Congress, House. United States Code. Title 17, section 1201, Office of the Law Revision Counsel, 23 Oct. 2022, https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title17-section1201&num=0&edition=prelim#1201_1.
+
   Jue, Aaron. "Coders' Rights Project Reverse Engineering FAQ." Electronic Frontier Foundation, Electronic Frontier Foundation, 13 May 2017, https://www.eff.org/issues/coders/reverse-engineering-faq.
+
   Debian. "Debian Social Contract", Version 1.2, Debian, 1 Oct. 2022, https://www.debian.org/social_contract.
