@@ -1,0 +1,18 @@
+# SOCIAL CONCERNS AND IMPLICATIONS
+
+## The Concern
+
+I am working with programs at a much lower level than I am used to — meaning closer to the hardware, with less abstraction. I have reimplemented the `clear(1)` command using nothing but [`hed`](https://github.com/fr0zn/hed), a vi-like hexadecimal editor; and references to documentation on ELF files, Linux system calls, and ANSI escape sequences; for both i386 and amd64 architectures. At this level, close to the hardware, very nasty attacks are possible, and they violate the social contract implicit in programming - you trust that the tools used to build and run your code will do so faithfully.
+
+Upon getting the ACM Turing award, Ken Thompson, the original creator of Unix, gave an acceptance speech that was titled *Reflections on Trusting Trust*, in which he described an attack that compromised the C compiler. The specifics of the attack are quite simple, with two parts. If the Unix `login` command is being compiled, "miscompile" it — insert a backdoor. If the C compiler itself is being compiled, "miscompile" it — add in this functionality. Thus, future versions of the C compiler which did not have this backdoor in the source code would still perpetuate it once compiled \(Thompson, 1984\).
+
+## The mitigation
+
+David A. Wheeler, in his 2009 dissertation *Fully Countering Trusting Trust through Diverse Double-Compiling*, describes a technique to ensure that the compiler's executable is not backdoored in the manner Thompson described, through a simple to pull off, if a bit confusing, process - given the source code for a C compiler, you compile it with two or more separate compilers. These do not need to be trusted themselves, but they must be truly separate, such that a single attacker could not have realistically compromised each of them. Then compile the compiler with each of them - the resulting executables will differ in content but not behavior, assuming that none of them are compromised in the fashion we're concerend with. Then, compile the source again using the new compilers. This should result in identical binaries, because the second generation of compilers have the same output.
+
+For illustrative purposes, suppose Alice, Bob, and Mallory each create C compilers - (`acc`, `bcc`, and `mcc`, respectively). Knowing that Wikipedia states that Mallory is used to represent a malicious attacker in Alice and Bob scenarios, and knowing the lack of a fourth wall in this particular one, Carlos decides to check for a "Trusting Trust" style compiler backdoor. After verifying that the source code itself seemed fine, he takes the source code for `mcc`, and compiles it with `acc`, `bcc`, and `mcc`, creating `mcc_a`, `mcc_b`, and `mcc_m`, respectively. Because the different compilers have different inner workings and optimisation approaches, the executables for `mcc_a`, `mcc_b`, and `mcc_m` are different from one another, but they should produce identical output, if the original `mcc` is to be trusted. If it's been backdoored in the manner Carlos is concerned about, then `mcc_a` and `mcc_b` would differ from `mcc_m`, because `acc` and `bcc` are not backdoored in the same way. Seeing that `mcc_m` is identical to `mcc_a` and `mcc_b`, Carlos realizes the plot twist - Mallory was not malicious in this scenario.
+
+## Citations
+  Thompson, Ken. *Reflections on Trusting Trust*. August 1984. http://genius.cat-v.org/ken-thompson/texts/trusting-trust/
+
+  Wheeler, David A. *Fully Countering Trusting Trust through Diverse Double-Compiling*. 2009. https://dwheeler.com/trusting-trust/dissertation/html/wheeler-trusting-trust-ddc.html#2.2.Other%20work%20on%20corrupted%20compilers.
